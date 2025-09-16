@@ -1,95 +1,241 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="pl">
 <head>
-<style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Licznik Kliknięć — Gra</title>
+  <style>
+    :root{
+      --bg-1:#0f1724;
+      --bg-2:#071126;
+      --card:#0b1220e6;
+      --accent:#8b5cf6;
+      --accent-2:#a78bfa;
+      --glass:rgba(255,255,255,0.04);
+      --muted:rgba(255,255,255,0.7);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
     body{
-        display: flex;
-flex-direction: column;
-text-align: center;
-justify-content: center;
-align-items: center;
-margin: 200px;
-padding: 200px;
-background-color: black;
-color: white;
-}
-/* From Uiverse.io by cssbuttons-io */ 
-button {
- --glow-color: rgb(217, 176, 255);
- --glow-spread-color: rgba(191, 123, 255, 0.781);
- --enhanced-glow-color: rgb(231, 206, 255);
- --btn-color: rgb(100, 61, 136);
- border: .25em solid var(--glow-color);
- padding: 1em 3em;
- color: var(--glow-color);
- font-size: 15px;
- font-weight: bold;
- background-color: var(--btn-color);
- border-radius: 1em;
- outline: none;
- box-shadow: 0 0 1em .25em var(--glow-color),
-        0 0 4em 1em var(--glow-spread-color),
-        inset 0 0 .75em .25em var(--glow-color);
- text-shadow: 0 0 .5em var(--glow-color);
- position: relative;
- transition: all 0.3s;
-}
-
-button::after {
- pointer-events: none;
- content: "";
- position: absolute;
- top: 120%;
- left: 0;
- height: 100%;
- width: 100%;
- background-color: var(--glow-spread-color);
- filter: blur(2em);
- opacity: .7;
- transform: perspective(1.5em) rotateX(35deg) scale(1, .6);
-}
-
-button:hover {
- color: var(--btn-color);
- background-color: var(--glow-color);
- box-shadow: 0 0 1em .25em var(--glow-color),
-        0 0 4em 2em var(--glow-spread-color),
-        inset 0 0 .75em .25em var(--glow-color);
-}
-
-button:active {
- box-shadow: 0 0 0.6em .25em var(--glow-color),
-        0 0 2.5em 2em var(--glow-spread-color),
-        inset 0 0 .5em .25em var(--glow-color);
-}
-</style>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Licznik kliknięć</title>
+      margin:0;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+      background:radial-gradient(1000px 600px at 10% 10%,var(--bg-2),transparent),linear-gradient(180deg,var(--bg-1),#020617);
+      color:#e6e9ee;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:32px
+    }
+    .container{
+      width:min(980px,96%);
+      background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));
+      border-radius:18px;
+      padding:28px;
+      box-shadow:0 10px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      display:grid;
+      grid-template-columns:320px 1fr;
+      gap:24px;
+      align-items:start;
+      backdrop-filter:blur(6px) saturate(120%);
+    }
+    .panel{
+      background:linear-gradient(180deg,var(--card),rgba(11,18,32,0.6));
+      border-radius:12px;
+      padding:18px;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,0.02);
+    }
+    .left{display:flex;flex-direction:column;gap:14px}
+    .title{font-size:20px;font-weight:600;letter-spacing:0.2px}
+    .big-btn{
+      --glow:rgba(139,92,246,0.18);
+      border-radius:14px;
+      padding:20px 24px;
+      border:1px solid rgba(139,92,246,0.18);
+      background:linear-gradient(180deg,var(--accent),var(--accent-2));
+      color:#08060a;
+      font-weight:700;
+      font-size:18px;
+      cursor:pointer;
+      box-shadow:0 8px 30px var(--glow),0 2px 6px rgba(0,0,0,0.45);
+      transition:transform .12s ease,box-shadow .12s ease,filter .12s ease;
+    }
+    .big-btn:active{transform:translateY(2px) scale(.997)}
+    .stats{display:flex;gap:12px;align-items:center;justify-content:space-between}
+    .stat{background:var(--glass);padding:10px;border-radius:10px;flex:1;text-align:center}
+    .stat .num{font-size:20px;font-weight:700}
+    .controls{display:flex;gap:10px}
+    .small-btn{padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--muted);cursor:pointer;font-weight:600}
+    .shop{display:flex;flex-direction:column;gap:8px}
+    .shop .item{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent)}
+    .price{font-weight:700;color:var(--accent-2)}
+    .message{min-height:36px;color:var(--accent-2);font-weight:600}
+    .right{display:flex;flex-direction:column;gap:14px}
+    .header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .progress-wrap{background:rgba(255,255,255,0.04);height:12px;border-radius:999px;overflow:hidden}
+    .progress{height:100%;width:0%;background:linear-gradient(90deg,var(--accent),#6ee7b7);transition:width .3s ease}
+    .history{display:flex;gap:10px;flex-wrap:wrap}
+    .chip{padding:8px 10px;border-radius:999px;background:rgba(255,255,255,0.02);font-size:13px}
+    .footer{display:flex;gap:12px;align-items:center;justify-content:space-between}
+    @media (max-width:880px){
+      .container{grid-template-columns:1fr;}
+      .left{order:2}
+      .right{order:1}
+    }
+  </style>
 </head>
 <body>
-    <button id="zwiekszLicznik">Kliknij mnie</button>
-    <p id="wynik">Kliknięcia: 0</p>
-    <p id="lol"></p>
-
-    <script>
-    let count = 0;
-
-const clickBtn = document.getElementById("zwiekszLicznik");
-const scoreEl = document.getElementById("wynik");
-const messageEl = document.getElementById("lol");
-
-clickBtn.addEventListener("click", () => {
-  count++;
-  scoreEl.textContent = "Punkty: " + count;
-
-  if (count === 10) {
-    messageEl.textContent = " Gratulacje, masz 10 punktów!";
-  } else if (count === 50) {
-    messageEl.textContent = " Wow, 50 punktów, jesteś mistrzem klikora!";
-  }
-});
-    </script>
+  <div class="container">
+    <div class="panel left">
+      <div class="title">Licznik Kliknięć</div>
+      <button id="main" class="big-btn">Kliknij mnie</button>
+      <div class="stats">
+        <div class="stat">
+          <div class="label">Punkty</div>
+          <div id="score" class="num">0</div>
+        </div>
+        <div class="stat">
+          <div class="label">Czas</div>
+          <div id="time" class="num">10s</div>
+        </div>
+      </div>
+      <div class="controls">
+        <button id="add" class="small-btn">+1</button>
+        <button id="sub" class="small-btn">-1</button>
+        <button id="reset" class="small-btn">Reset</button>
+      </div>
+      <div class="shop">
+        <div class="item">
+          <div>
+            <div style="font-weight:700">Auto-klikacz</div>
+            <div style="font-size:13px;color:var(--muted)">Dodaje 1 pkt/s</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <div class="price">20</div>
+            <button id="buy" class="small-btn">Kup</button>
+          </div>
+        </div>
+        <div id="shopMsg" class="message">Kup auto-klikera za 20 punktów.</div>
+      </div>
+    </div>
+    <div class="panel right">
+      <div class="header">
+        <div style="font-size:18px;font-weight:700">Twoja sesja</div>
+        <div class="chip" id="status">Gotowy</div>
+      </div>
+      <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div style="font-weight:700">Postęp</div>
+          <div id="milestone" style="font-weight:700">0 / 50</div>
+        </div>
+        <div class="progress-wrap"><div id="progress" class="progress"></div></div>
+      </div>
+      <div>
+        <div style="font-weight:700;margin-bottom:8px">Historia akcji</div>
+        <div id="history" class="history"></div>
+      </div>
+      <div style="flex:1"></div>
+      <div class="footer">
+        <div id="message" style="color:var(--accent-2);font-weight:700">Powodzenia!</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    let score=0
+    let timeLeft=10
+    let auto=false
+    let autoId=null
+    let timerId=null
+    const main=document.getElementById('main')
+    const add=document.getElementById('add')
+    const sub=document.getElementById('sub')
+    const buy=document.getElementById('buy')
+    const reset=document.getElementById('reset')
+    const scoreEl=document.getElementById('score')
+    const timeEl=document.getElementById('time')
+    const msg=document.getElementById('message')
+    const shopMsg=document.getElementById('shopMsg')
+    const status=document.getElementById('status')
+    const historyEl=document.getElementById('history')
+    const progress=document.getElementById('progress')
+    const milestone=document.getElementById('milestone')
+    function render(){
+      scoreEl.textContent=score
+      timeEl.textContent=timeLeft+'s'
+      milestone.textContent=score+' / 50'
+      progress.style.width=Math.min(100,score/50*100)+'%'
+      if(score>=10&&score<50)msg.textContent='Gratulacje, masz 10 punktów! 🎉'
+      if(score>=50)msg.textContent='Wow, 50 punktów, jesteś mistrzem klikora! 🏆'
+      if(score<10)msg.textContent=''
+    }
+    function pushHistory(text){
+      const el=document.createElement('div')
+      el.className='chip'
+      el.textContent=text
+      historyEl.prepend(el)
+      if(historyEl.children.length>10)historyEl.removeChild(historyEl.lastChild)
+    }
+    main.addEventListener('click',()=>{
+      score++
+      render()
+      pushHistory('+1 klik')
+    })
+    add.addEventListener('click',()=>{
+      score++
+      render()
+      add.style.background='linear-gradient(90deg,rgba(255,255,255,0.03),transparent)'
+      pushHistory('+1 manual')
+    })
+    sub.addEventListener('click',()=>{
+      score--
+      render()
+      pushHistory('-1 manual')
+    })
+    buy.addEventListener('click',()=>{
+      if(auto){
+        shopMsg.textContent='Masz już auto-klikera!'
+        return
+      }
+      if(score<20){
+        shopMsg.textContent='Potrzebujesz 20 punktów na auto-klikera!'
+        return
+      }
+      score-=20
+      auto=true
+      shopMsg.textContent='Kupiono auto-klikera! 🎉'
+      status.textContent='Auto ON'
+      pushHistory('Kupiono auto-klikera')
+      autoId=setInterval(()=>{
+        score++
+        render()
+        pushHistory('+1 auto')
+      },1000)
+    })
+    reset.addEventListener('click',()=>{
+      score=0
+      timeLeft=10
+      if(autoId)clearInterval(autoId)
+      auto=false
+      shopMsg.textContent='Kup auto-klikera za 20 punktów.'
+      status.textContent='Gotowy'
+      render()
+      historyEl.innerHTML=''
+    })
+    function startTimer(){
+      timerId=setInterval(()=>{
+        timeLeft--
+        if(timeLeft<=0){
+          clearInterval(timerId)
+          if(autoId)clearInterval(autoId)
+          document.querySelectorAll('button').forEach(b=>b.disabled=true)
+          status.textContent='Zakończono'
+          msg.textContent='Koniec! Wynik: '+score
+          pushHistory('Koniec gry')
+        }
+        render()
+      },1000)
+    }
+    render()
+    startTimer()
+  </script>
 </body>
 </html>
