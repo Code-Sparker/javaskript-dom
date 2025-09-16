@@ -69,16 +69,27 @@ button:active {
     <title>Licznik kliknięć</title>
 </head>
 <body>
-    <button onclick="zwiekszLicznik()">Kliknij mnie</button>
+    <button id="zwiekszLicznik">Kliknij mnie</button>
     <p id="wynik">Kliknięcia: 0</p>
+    <p id="lol"></p>
 
     <script>
-        let licznik = 0;
+    let count = 0;
 
-        function zwiekszLicznik() {
-            licznik++;
-            document.getElementById("wynik").textContent = "Kliknięcia: " + licznik;
-        }
+const clickBtn = document.getElementById("zwiekszLicznik");
+const scoreEl = document.getElementById("wynik");
+const messageEl = document.getElementById("lol");
+
+clickBtn.addEventListener("click", () => {
+  count++;
+  scoreEl.textContent = "Punkty: " + count;
+
+  if (count === 10) {
+    messageEl.textContent = " Gratulacje, masz 10 punktów!";
+  } else if (count === 50) {
+    messageEl.textContent = " Wow, 50 punktów, jesteś mistrzem klikora!";
+  }
+});
     </script>
 </body>
 </html>
